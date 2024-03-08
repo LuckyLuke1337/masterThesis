@@ -11,9 +11,9 @@ migrations = 200
 pop_size = 10
 
 #general parameters
-dimension = 2
-min_s = [-500,-500]
-max_s = [500, 500]
+dimension = 10
+min_s = [-500,-500, -500, -500, -500,-500,-500, -500, -500, -500]
+max_s = [500, 500, 500, 500, 500, 500, 500, 500, 500, 500]
 
 class Individual:
     """Individual of the population. It holds parameters of the solution as well as the fitness of the solution."""
@@ -34,13 +34,13 @@ def rastrigin(params):
 def schwefel(params):
     return 418.9829 * len(params) - np.sum(params * np.sin(np.sqrt(np.abs(params))))
 
-def evaluate(params):
+def evaluate(params, testFunction):
     """Returns fitness of the params"""
-    f  = functions.f21
+    # f  = functions.f14
     #return de_jong_first(params)
     # return schwefel(params)    
     #return rastrigin(params)
-    return f([params])[0]
+    return testFunction([params])[0]
 def bounded(params, min_s: list, max_s: list):
     """
     Returns bounded version of params
@@ -55,10 +55,10 @@ def bounded(params, min_s: list, max_s: list):
     return np.where(out_of_bounds, np.random.uniform(min_s, max_s, size=params.shape), params)
 
 
-def generate_population(size, min_s, max_s, dimension):
+def generate_population(size, min_s, max_s, dimension, testFunction):
     def generate_individual():
         params = np.random.uniform(min_s, max_s, dimension)
-        fitness = evaluate(params)
+        fitness = evaluate(params, testFunction)
         return Individual(params, fitness)
     return [generate_individual() for _ in range(size)]
 
@@ -75,7 +75,7 @@ def get_leader(population):
 
     return min(population, key=calculate_fitness)
 
-def soma_all_to_one_rand(population, prt, path_length, step, migrations, min_s, max_s, dimension):
+def soma_all_to_one_rand(population, prt, path_length, step, migrations, min_s, max_s, dimension,testFunction):
     for generation in range(migrations):
         leading = np.random.choice(population)
         for individual in population:
@@ -88,7 +88,7 @@ def soma_all_to_one_rand(population, prt, path_length, step, migrations, min_s, 
                 current_position = individual.params + (leading.params - individual.params) * t * prt_vector
                 current_position = bounded(current_position, min_s, max_s)
                 # print("current position:", current_position)
-                fitness = evaluate(current_position)
+                fitness = evaluate(current_position, testFunction)
 
                 if np.any(fitness <= individual.fitness):
                     next_position = current_position
@@ -98,8 +98,13 @@ def soma_all_to_one_rand(population, prt, path_length, step, migrations, min_s, 
 
 
 
-population = generate_population(pop_size,min_s, max_s, dimension)
-print("initial population:",population)
-result = soma_all_to_one_rand(population, prt, path_lenght, step, migrations, min_s, max_s, dimension)
-print(result)
-utils.surface_plot(functions.f21, points=120)
+# population = generate_population(pop_size,min_s, max_s, dimension)
+# print("initial population:",population)
+# result = soma_all_to_one_rand(population, prt, path_lenght, step, migrations, min_s, max_s, dimension)
+# print(result)
+# utils.surface_plot(functions.f14, points=120)
+
+for i in functions.all_functions:
+    population = generate_population(pop_size,min_s, max_s, dimension,i)
+    result = soma_all_to_one_rand(population, prt, path_lenght, step, migrations, min_s, max_s, dimension,i)
+    print("function: ",i, "result: ", result)
