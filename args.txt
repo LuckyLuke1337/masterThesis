@@ -1,1 +1,1 @@
-['/home/luckyluke/Documents/FAI/masterThesis/externalLibaries/python-irace/main.py']
+['main.py', '--prt', '0.1648', '--pathLenght', '4.0178', '--step', '0.4197', '--datfile', 'test.dat']
