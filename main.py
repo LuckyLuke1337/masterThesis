@@ -10,11 +10,11 @@ import sys
 
 
 
-def main ( prt, DATFILE):
+def main(prt, pathLenght, step, DATFILE):
     #SOMA parameters
     # prt = 0.2
-    path_lenght = 2
-    step = 0.11
+    # pathLenght = 2
+    # step = 0.11
     migrations = 200
     pop_size = 10
 
@@ -70,7 +70,7 @@ def main ( prt, DATFILE):
 
         return min(population, key=calculate_fitness)
 
-    def soma_all_to_one_rand(population, prt, path_length, step, migrations, min_s, max_s, dimension,testFunction):
+    def soma_all_to_one_rand(population, prt, pathLenght, step, migrations, min_s, max_s, dimension,testFunction):
         for generation in range(migrations):
             leading = np.random.choice(population)
             for individual in population:
@@ -79,7 +79,7 @@ def main ( prt, DATFILE):
                     continue
                 next_position = individual.params
                 prt_vector = generate_prt_vector(prt, dimension)
-                for t in np.arange(step, path_length, step):
+                for t in np.arange(step, pathLenght, step):
                     current_position = individual.params + (leading.params - individual.params) * t * prt_vector
                     current_position = bounded(current_position, min_s, max_s)
                     # print("current position:", current_position)
@@ -89,37 +89,43 @@ def main ( prt, DATFILE):
                         next_position = current_position
                         individual.fitness = fitness
                 individual.params = next_position
-        return get_leader(population)
-
+        result = get_leader(population)
+        return result.fitness
 
     # loop trought all functions
     # for i in functions.all_functions:
     #     population = generate_population(pop_size,min_s, max_s, dimension,i)
-    #     result = soma_all_to_one_rand(population, prt, path_lenght, step, migrations, min_s, max_s, dimension,i)
+    #     result = soma_all_to_one_rand(population, prt, pathLenght, step, migrations, min_s, max_s, dimension,i)
     #     print("function: ",i, "result: ", result)
 
-    population = generate_population(pop_size,min_s, max_s, dimension,functions.f5)
-    result = soma_all_to_one_rand(population, prt, path_lenght, step, migrations, min_s, max_s, dimension,functions.f5)
+    population = generate_population(pop_size,min_s, max_s, dimension, functions.f5)
+    result = soma_all_to_one_rand(population, prt, pathLenght, step, migrations, min_s, max_s, dimension,functions.f5)
 
     with open(DATFILE, 'w') as f:
 	    f.write(str(result))
 
+
 if __name__ == "__main__":
 	# just check if args are ok
-	with open('args.txt', 'w') as f:
-		f.write(str(sys.argv))
+    # 
+    with open('args.txt', 'w') as f:
+	    f.write(str(sys.argv))
+
+    # print("test")
 	
 	# loading example arguments
-	ap = argparse.ArgumentParser(description='Feature Selection using SOMA')
-	ap.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
+    ap = argparse.ArgumentParser(description='Feature Selection using SOMA')
+    ap.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
 	# 3 args to test values
 	# ap.add_argument('--pop', dest='pop', type=int, required=True, help='Population size')
-	ap.add_argument('--prt', dest='prt', type=float, required=True, help='Perturbation')
+    ap.add_argument('--prt', dest='prt', type=float, required=True, help='Perturbation')
+    ap.add_argument('--pathLenght', dest='pathLenght', type=float, required=True, help='Path lenght')
+    ap.add_argument('--step', dest='step', type=float, required=True, help='Step size')
 	# ap.add_argument('--fun', dest='testFunction', type=str, required=True, help='CEC2017 testfunction')
 	# 1 arg file name to save and load fo value
-	ap.add_argument('--datfile', dest='datfile', type=str, required=True, help='File where it will be save the score (result)')
 
-	args = ap.parse_args()
-	logging.debug(args)
-	# call main function passing args
-	main( args.prt, args.datfile)
+    ap.add_argument('--datfile', dest='datfile', type=str, required=True, help='File where it will be save the score (result)')
+    args = ap.parse_args()
+    logging.debug(args)
+
+    main(args.prt, args.pathLenght, args.step, args.datfile)
