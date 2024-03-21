@@ -1,1 +1,1 @@
-['../main.py', '-v', '--prt', '0.6488', '--pathLenght', '4.3301', '--step', '0.2099', '--datfile', 'c143-1.dat']
+['../main.py', '-v', '--function=15', '--prt', '0.6852', '--pathLenght', '3.9947', '--step', '0.1685', '--datfile', 'c135-15.dat']
