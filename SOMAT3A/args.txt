@@ -1,0 +1,1 @@
+['main.py', '--function=20', '--m', '5', '--n', '4', '--k', '2', '--nJumps', '54', '--datfile', 'test.dat']
