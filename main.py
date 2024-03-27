@@ -99,7 +99,7 @@ def main(prt, pathLenght, step, DATFILE):
 
     population = generate_population(pop_size,min_s, max_s, dimension, functions.all_functions[functionIndex])
     result = soma_all_to_one_rand(population, prt, pathLenght, step, migrations, min_s, max_s, dimension,functions.all_functions[functionIndex])
-
+    print(result)
     with open(DATFILE, 'w') as f:
 	    f.write(str(result))
 
@@ -130,6 +130,6 @@ if __name__ == "__main__":
     logging.debug(args)
     functionIndex = args.function - 1
     print(functions.all_functions[functionIndex])
-    print(functions.f5)
+    
 
     main(args.prt, args.pathLenght, args.step, args.datfile)

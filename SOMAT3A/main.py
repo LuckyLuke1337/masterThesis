@@ -10,18 +10,20 @@ import argparse
 import logging
 import sys
 
-def main(m, n, k, nJumps, DATFILE):
+def main(m, n, k, nJumps, DATFILE, function):
 
-    Dim = 10
+    Dim = 30
+    functionIndex = function - 1
     costFunction = functions.all_functions[functionIndex]
     # -------------- Control Parameters of SOMA -------------------------------
     # nJumps = 45
     NP = 30
-    Max_Mig, Max_FEs = 100, Dim*100*NP
+    Max_FEs = 300000
+    # Max_Mig, Max_FEs = 300000, Dim*100*NP
     # m, n, k = 9, 5, 9
     # -------------- The domain (search space) --------------------------------
-    VarMin = -500 + numpy.zeros(Dim)
-    VarMax = 500 + numpy.zeros(Dim)
+    VarMin = -100 + numpy.zeros(Dim)
+    VarMax = 100 + numpy.zeros(Dim)
 
 
     # ------------- Create the initial Population -----------------------------
@@ -33,7 +35,7 @@ def main(m, n, k, nJumps, DATFILE):
     # print("initial population:",pop)
 
     # fit = CostFunction(pop)
-    fit = costFunction(pop.T)
+    fit = costFunction(pop.T)-(100*function)
     # fit = functions.f5([pop])[0]
 
     # print("initial fitness:",fit)
@@ -70,7 +72,7 @@ def main(m, n, k, nJumps, DATFILE):
                         indi_new[rw,cl] = VarMin[rw,0] + numpy.random.rand() * (VarMax[rw,0] - VarMin[rw,0])
             newpop[:,nJumps*j:nJumps*(j+1)] = indi_new
         # ------------ Evaluate the offspring and Update -------------
-        newfitpop = costFunction(newpop.T)
+        newfitpop = costFunction(newpop.T)-(100*function)
         FEs = FEs + n*nJumps
         for j in range(n):
             newfit = newfitpop[nJumps*j:nJumps*(j+1)]
@@ -86,9 +88,10 @@ def main(m, n, k, nJumps, DATFILE):
                     best_val = newpop[:, (nJumps*j)+id]
 
 
-    print(best_fit)
+    
     with open(DATFILE, 'w') as f:
 	    f.write(str(best_fit))
+    return(best_fit)
 
 if __name__ == "__main__":
 	# just check if args are ok
@@ -100,20 +103,21 @@ if __name__ == "__main__":
 
     ap.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
 	
-    ap.add_argument('--m', dest='m', type=int, required=True, help='Perturbation')
-    ap.add_argument('--n', dest='n', type=int, required=True, help='Path lenght')
-    ap.add_argument('--k', dest='k', type=int, required=True, help='Step size')
-    ap.add_argument('--nJumps', dest='nJumps', type=int, required=True, help='Step size')
+    ap.add_argument('--m', dest='m', type=int, required=True, help='Miigrants')
+    ap.add_argument('--n', dest='n', type=int, required=True, help='Best n')
+    ap.add_argument('--k', dest='k', type=int, required=True, help='Best k')
+    ap.add_argument('--nJumps', dest='nJumps', type=int, required=True, help='Jumps count')
 
     ap.add_argument('--function', dest='function', type=int, required=True, help='Test function')
 
     ap.add_argument('--datfile', dest='datfile', type=str, required=True, help='File where it will be save the score (result)')
     args = ap.parse_args()
     logging.debug(args)
-    functionIndex = args.function - 1
+    
+    # functionIndex = args.function - 1
     
 
-    main(args.m, args.n, args.k, args.nJumps, args.datfile)
+    main(args.m, args.n, args.k, args.nJumps, args.datfile, args.function)
 
 """
 This algorithm is programmed according to the descriptions in the papers 

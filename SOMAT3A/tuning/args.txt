@@ -1,1 +1,1 @@
-['../main.py', '-v', '--function=4', '--m', '6', '--n', '2', '--k', '10', '--nJumps', '27', '--datfile', 'c125-4.dat']
+['../main.py', '-v', '--function=27', '--m', '5', '--n', '2', '--k', '15', '--nJumps', '28', '--datfile', 'c124-27.dat']

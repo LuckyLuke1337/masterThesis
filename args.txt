@@ -1,1 +1,1 @@
-['main.py', '--function=2', '--prt', '0.1648', '--pathLenght', '4.0178', '--step', '0.4197', '--datfile', 'test.dat']
+['/home/luckyluke/Documents/FAI/masterThesis/iSOMA/main.py']
