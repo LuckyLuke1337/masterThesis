@@ -1,4 +1,15 @@
-Autoconfiguration framework iRACE for the SOMA algorithm, Michal Pluhacek
+
+prereqs:
+https://github.com/tilleyd/cec2017-py
+https://pypi.org/project/statistics/
+https://pypi.org/project/numpy/
+https://pypi.org/project/tabulate/
+
+
+
+
+Autoconfiguration framework iRACE for the SOMA algorithm
+
 Zásady pro vypracování*	
   1	Seznamte se s moderními variantami algoritmu SOMA a vytvořte jejich přehled.
 	2	Dekomponujte vybrané varianty algoritmu SOMA.
