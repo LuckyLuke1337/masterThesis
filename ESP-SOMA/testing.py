@@ -1,10 +1,10 @@
-import main as SOMAPareto
+import main as ESPSOMA
 import statistics
 from tabulate import tabulate
 
 
 fitness = 0
-parameters = [[5,0.7385,1.5394],[7,1,0.4547],[7,0.7643,1.8242]]
+parameters = [[7, 3, 0.33, 1]]
 
 
 for inputs in parameters:
@@ -14,7 +14,7 @@ for inputs in parameters:
         values = []
 
         for i in range(1,51):
-            fitness = SOMAPareto.main(*inputs, "test.dat", costFunction)
+            fitness = ESPSOMA.main(*inputs, "test.dat", costFunction)
             mean += fitness
             values.append(fitness)
             
