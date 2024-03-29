@@ -13,7 +13,7 @@ pathLength = 3.0
 step = 0.31
 adaptivePrt = 1
 
-testFunction = functions.f15
+testFunction = functions.f2
 
 
 
@@ -39,7 +39,6 @@ class Individual:
 
   def updateFitness(self, fitnessFunction):
     self.fitness = fitnessFunction([self.position])[0]
-    # Update best fitness if necessary
     self.bestFitness = max(self.bestFitness or -float('inf'), self.fitness)
 
   def migrate(self, leader, prtVector):
@@ -65,40 +64,35 @@ def main():
     for i in population:
         i.updateFitness(testFunction)
 
-  # Main loop
+
     for iteration in range(MAX_ITERATION):
         for i in range(NP):
             individual = population[i]
-        # Update fitness if not already done
-        #   if individual.fitness is None:
-            # individual.updateFitness(testFunction)
 
         # Select leader based on strategy
             if individual.strategy == "AllToOne":
-                leader = max(population, key=lambda x: x.fitness)
+                leader = min(population, key=lambda x: x.fitness)
             elif individual.strategy == "AllToRandom":
                 leader = random.choice(population)
             else:
-            
-
                 leaderCandidates = [p for p in population if p != individual]
-                leader = max(leaderCandidates, key=lambda x: x.fitness)
+                leader = min(leaderCandidates, key=lambda x: x.fitness)
 
         # Migration
         for t in np.arange(0, pathLength + 1, step):
             prtVector = [random.uniform(0, 1) for _ in range(D)]
             newPosition = individual.migrate(leader.position, prtVector)
 
-            # Evaluate new position (assuming your_fitnessFunction exists)
+            # Evaluate new position
             newIndividual = Individual(newPosition, individual.strategy, individual.prt)
             newIndividual.updateFitness(testFunction)
 
             # Update population if improvement
-            if newIndividual.fitness > individual.fitness:
+            if newIndividual.fitness < individual.fitness:
                 population[i] = newIndividual
 
         # Adaptive strategy & prt update
-        if individual.fitness <= individual.bestFitness:
+        if individual.fitness >= individual.bestFitness:
             individual.counter += 1
             if individual.counter > gap:
                 print("changing strategy to:")
@@ -106,9 +100,10 @@ def main():
                 individual.prt = roulette([0.1, 0.3, 0.5, 0.7, 0.9], [individual.fitness] * 5)
                 individual.strategy = roulette(["AllToOne", "AllToRandom", "AllToAll"], [individual.fitness] * 3)
                 print(individual.prt, individual.strategy)
+                
         # Record best solution (implementation depends on your needs)
         # Record best solution (implementation depends on your needs)
-        bestIndividual = max(population, key=lambda x: x.fitness)
+        bestIndividual = min(population, key=lambda x: x.fitness)
         # print(f"Best individual position: {bestIndividual.position}")
         print(f"Best fitness: {bestIndividual.fitness}")
 
