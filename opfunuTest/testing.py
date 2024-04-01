@@ -8,7 +8,7 @@ import opfunu
 costFunctions = opfunu.get_functions_based_classname("2017")
 
 fitness = 0 
-parameters = [[45,15,10,5]]
+parameters = [[45,10,4,10]]
 
 
 for inputs in parameters:
@@ -24,4 +24,5 @@ for inputs in parameters:
         data.append([str(costFunction.__name__), mean/51, statistics.stdev(values)])
         print("calculated ", costFunction, " of 30 ", end="\r")
 
-    print("table for input values
+    print("table for input values: ",inputs)
+    print(tabulate(data,headers='firstrow',tablefmt='grid'))
